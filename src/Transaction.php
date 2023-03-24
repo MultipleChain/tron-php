@@ -172,17 +172,15 @@ final class Transaction
     }
 
     /**
-     * @param string receiver
-     * @param int amount
-     * @param string|null tokenAddress
+     * @param object $config
      * @return bool
      */
-    public function verifyTransferWithData(string $receiver, float $amount, ?string $tokenAddress = null) : bool
+    public function verifyTransferWithData(object $config) : bool
     {
-        if (!$tokenAddress) {
-            return $this->verifyCoinTransferWithData($receiver, $amount);
+        if (isset($config->tokenAddress) && !is_null($config->tokenAddress)) {
+            return $this->verifyTokenTransferWithData($config->receiver, $config->amount, $config->tokenAddress);
         } else {
-            return $this->verifyTokenTransferWithData($receiver, $amount, $tokenAddress);
+            return $this->verifyCoinTransferWithData($config->receiver, $config->amount);
         }
     }
 

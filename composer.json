@@ -1,6 +1,6 @@
 {
     "name": "multiplechain/tron",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Allows you to easily make requests to the TRON RPC API.",
     "type": "library",
     "license": "MIT",
