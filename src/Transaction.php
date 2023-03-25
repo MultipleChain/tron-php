@@ -93,9 +93,9 @@ final class Transaction
     }
 
     /**
-     * @return bool
+     * @return ?bool
      */
-    public function validate() : bool
+    public function getStatus() : ?bool
     {
         $result = null;
 
@@ -112,6 +112,16 @@ final class Transaction
                 }
             }
         }
+
+        return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public function validate() : bool
+    {
+        $result = $this->getStatus();
 
         if (is_bool($result)) {
             return $result;
