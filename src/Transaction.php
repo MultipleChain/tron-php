@@ -31,11 +31,8 @@ final class Transaction
      */
     public function __construct(string $hash, Provider $provider)
     {
-        $this->provider = $provider;
-
         $this->hash = $hash;
-
-        $this->data = $this->getData();
+        $this->provider = $provider;
     }
 
     /**
@@ -65,11 +62,9 @@ final class Transaction
 
         if ($input != '0x') {
             $receiver = substr(substr($input, 0, 72), 30);
-            $pattern = '/.+?(?='.$receiver.')/';
-            preg_match($pattern, $input, $matches, PREG_OFFSET_CAPTURE, 0);
-            $input = str_replace([$matches[0][0], $receiver], '', $input);
             $receiver = $this->provider->tron->fromHex($receiver);
-            $amount = '0x' . ltrim($input, 0);
+            preg_match('/.+?(?='.$receiver.')/', $input, $matches, PREG_OFFSET_CAPTURE, 0);
+            $amount = '0x' . ltrim(str_replace([$matches[0][0], $receiver], '', $input), 0);
             return (object) compact('receiver', 'amount');
         } else {
             return null;
