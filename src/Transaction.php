@@ -58,7 +58,7 @@ final class Transaction
      */
     public function decodeInput() : ?object
     {
-        $input = $this->data->raw_data->contract[0]->parameter->value->data;
+        $input = $this->getData()->raw_data->contract[0]->parameter->value->data;
 
         if ($input != '0x') {
             $receiver = substr(substr($input, 0, 72), 30);
@@ -77,10 +77,11 @@ final class Transaction
     public function getConfirmations() : int
     {
         try {
+            $data = $this->getData();
             $currentBlock = $this->provider->getCurrentBlock();
-            if ($this->data->info->blockNumber === null) return 0;
+            if ($data->info->blockNumber === null) return 0;
             
-            $confirmations = $currentBlock->block_header->raw_data->number - $this->data->info->blockNumber;
+            $confirmations = $currentBlock->block_header->raw_data->number - $data->info->blockNumber;
             return $confirmations < 0 ? 0 : $confirmations;
         } catch (Exception $e) {
             throw new \Exception($e->getMessage(), $e->getCode());
@@ -93,14 +94,15 @@ final class Transaction
     public function validate() : bool
     {
         $result = null;
+        $data = $this->getData();
 
-        if ($this->data == null) {
+        if ($data == null) {
             $result = false;
         } else {
-            if (isset($this->data->info->blockNumber)) {
-                if ($this->data->ret[0]->contractRet == 'REVERT') {
+            if (isset($data->info->blockNumber)) {
+                if ($data->ret[0]->contractRet == 'REVERT') {
                     $result = false;
-                } elseif (isset($this->data->info->result) && $this->data->info->result == 'FAILED') {
+                } elseif (isset($data->info->result) && $data->info->result == 'FAILED') {
                     $result = false;
                 } else {
                     $result = true;
@@ -150,7 +152,7 @@ final class Transaction
     public function verifyCoinTransferWithData(string $receiver, float $amount) : bool 
     {
         if ($this->validate()) {
-            $params = $this->data->raw_data->contract[0]->parameter->value;
+            $params = $this->getData()->raw_data->contract[0]->parameter->value;
             $data = (object) [
                 "receiver" => strtolower($this->provider->tron->fromHex($params->to_address)),
                 "amount" => floatval(Utils::toDec($params->amount, 6))
