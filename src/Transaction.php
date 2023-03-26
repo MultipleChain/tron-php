@@ -66,10 +66,10 @@ final class Transaction
         $input = $this->data->raw_data->contract[0]->parameter->value->data;
 
         if ($input != '0x') {
-            $receiver = substr(substr($input, 0, 72), 30);
-            $receiver = $this->provider->tron->fromHex($receiver);
+            $receiver = substr(substr($input, 0, 72), 32);
             preg_match('/.+?(?='.$receiver.')/', $input, $matches, PREG_OFFSET_CAPTURE, 0);
             $amount = '0x' . ltrim(str_replace([$matches[0][0], $receiver], '', $input), 0);
+            $receiver = $this->provider->tron->fromHex("41".$receiver);
             return (object) compact('receiver', 'amount');
         } else {
             return null;
