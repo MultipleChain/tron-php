@@ -3,6 +3,7 @@
 namespace MultipleChain\Tron;
 
 use Exception;
+use MultipleChain\Utils;
 use \IEXBase\TronAPI\Tron;
 use \IEXBase\TronAPI\Provider\HttpProvider;
 use \IEXBase\TronAPI\Exception\TronException;
@@ -21,10 +22,10 @@ final class Provider
     private $networks = [
         "mainnet" => [
             "host" => "https://api.trongrid.io/",
-            "explorer" => "https://tronscan.io/"
+            "explorer" => "https://tronscan.org/"
         ],
         "testnet" => [
-            "host" => "https://api.nileex.io/",
+            "host" => "https://api.shasta.trongrid.io/",
             "explorer" => "https://nile.tronscan.org/"
         ]
     ];
@@ -51,6 +52,42 @@ final class Provider
         } catch (TronException $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * @param string $address
+     * @param string $tokenAddress
+     * @return object
+     */
+    public function getLastTransactionByReceiver(string $receiver, ?string $tokenAddress = null) : object
+    {
+        $tx = file_get_contents($this->network->host . 'v1/accounts/' . $receiver . '/transactions?limit=1');
+        $tx = json_decode($tx);
+
+        if (!isset($tx->data[0])) {
+            return (object) [
+                "hash" => null,
+                "amount" => 0
+            ];
+        }
+        
+        $tx = $tx->data[0];
+        $hash = $tx->txID;
+
+        if ($tokenAddress) {
+            $tx = $this->Transaction($hash);
+            $data = $this->decodeInput();
+            $token = $this->provider->tron->contract($address);
+            $amount = Utils::toDec($data->amount, $token->decimals());
+        } else {
+            $params = $tx->raw_data->contract[0]->parameter->value;
+            $amount = floatval(Utils::toDec($params->amount, 6));
+        }
+
+        return (object) [
+            "hash" => $hash,
+            "amount" => $amount
+        ];
     }
 
     /**
