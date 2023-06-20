@@ -33,11 +33,6 @@ final class Transaction
     {
         $this->hash = $hash;
         $this->provider = $provider;
-        try {
-            $this->getData();
-        } catch (Exception $e) {
-            throw new \Exception($e->getMessage());
-        }
     }
 
     /**
@@ -63,6 +58,7 @@ final class Transaction
      */
     public function decodeInput() : ?object
     {
+        $this->getData();
         $input = $this->data->raw_data->contract[0]->parameter->value->data;
 
         if ($input != '0x') {
@@ -82,6 +78,7 @@ final class Transaction
     public function getConfirmations() : int
     {
         try {
+            $this->getData();
             $currentBlock = $this->provider->getCurrentBlock();
             if ($this->data->info->blockNumber === null) return 0;
             
@@ -97,6 +94,7 @@ final class Transaction
      */
     public function validate() : ?bool
     {
+        $this->getData();
         $result = null;
 
         if ($this->data == null) {
