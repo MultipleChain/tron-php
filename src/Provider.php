@@ -25,7 +25,7 @@ final class Provider
             "explorer" => "https://tronscan.org/"
         ],
         "testnet" => [
-            "host" => "https://api.shasta.trongrid.io/",
+            "host" => "https://nile.trongrid.io/",
             "explorer" => "https://nile.tronscan.org/"
         ]
     ];
