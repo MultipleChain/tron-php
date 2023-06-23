@@ -36,11 +36,13 @@ final class Provider
     public $network;
 
     /**
-     * @param bool $testnet
+     * @param array|object $options
      * @throws Exception
      */
-    public function __construct(bool $testnet = false) 
+    public function __construct($options) 
     {
+        $options = is_array($options) ? (object) $options : $options;
+        $testnet = isset($options->testnet) ? $options->testnet : false;
         $this->network = (object) $this->networks[$testnet ? 'testnet' : 'mainnet'];
 
         $fullNode = new HttpProvider($this->network->host);
