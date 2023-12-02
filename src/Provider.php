@@ -39,7 +39,7 @@ final class Provider
      * @param array|object $options
      * @throws Exception
      */
-    public function __construct($options) 
+    public function __construct($options = []) 
     {
         $options = is_array($options) ? (object) $options : $options;
         $testnet = isset($options->testnet) ? $options->testnet : false;
