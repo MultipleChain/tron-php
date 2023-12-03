@@ -97,17 +97,13 @@ final class Transaction
         $this->getData();
         $result = null;
 
-        if ($this->data == null) {
-            $result = false;
-        } else {
-            if (isset($this->data->info->blockNumber)) {
-                if ($this->data->ret[0]->contractRet == 'REVERT') {
-                    $result = false;
-                } elseif (isset($this->data->info->result) && $this->data->info->result == 'FAILED') {
-                    $result = false;
-                } else {
-                    $result = true;
-                }
+        if ($this->data && isset($this->data->info->blockNumber)) {
+            if ($this->data->ret[0]->contractRet == 'REVERT') {
+                $result = false;
+            } elseif (isset($this->data->info->result) && $this->data->info->result == 'FAILED') {
+                $result = false;
+            } else {
+                $result = true;
             }
         }
 
