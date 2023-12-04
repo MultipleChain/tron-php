@@ -53,6 +53,12 @@ final class Transaction
         return $this->data = $data;
     }
 
+    public function getFrom() : string
+    {
+        $this->getData();
+        return $this->provider->tron->fromHex($this->data->raw_data->contract[0]->parameter->value->owner_address);
+    }
+    
     /**
      * @return object|null
      */
