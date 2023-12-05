@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a8f4703726c50b64850f33ddb55351f",
+    "content-hash": "4eb4da0c5ec16014a1ed02fc5e5d00dd",
     "packages": [
         {
             "name": "comely-io/data-types",
@@ -1389,7 +1389,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.2",
+        "php": ">=7.4",
         "ext-mbstring": "*"
     },
     "platform-dev": [],
